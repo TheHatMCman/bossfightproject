@@ -86,6 +86,8 @@ game.onUpdate(function () {
     }
     if (wallJump == 1) {
         controller.moveSprite(thePlayer, 0, 0)
+        pause(100)
+        controller.moveSprite(thePlayer, 100, 0)
     }
 })
 forever(function () {
@@ -107,5 +109,8 @@ forever(function () {
             thePlayer.vx = -100
             wallJump = 1
         }
+    }
+    if (thePlayer.isHittingTile(CollisionDirection.Bottom)) {
+        wallJump = 0
     }
 })
