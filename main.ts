@@ -11,6 +11,7 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
         thePlayer.vy = -150
         pause(200)
         thePlayer.vy = -100
+        jumpCounter = 1
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile4`, function (sprite, location) {
@@ -30,6 +31,7 @@ function stageOne () {
 function arenaOne () {
     tiles.setTilemap(tilemap`level1`)
 }
+let wallJump = 0
 let jumpCounter = 0
 let thePlayer: Sprite = null
 let bossOne = sprites.create(img`
@@ -80,30 +82,30 @@ stageOne()
 game.onUpdate(function () {
     if (thePlayer.isHittingTile(CollisionDirection.Bottom)) {
         jumpCounter = 0
+        wallJump = 0
+    }
+    if (wallJump == 1) {
+        controller.moveSprite(thePlayer, 0, 0)
     }
 })
 forever(function () {
-    thePlayer.ay = 200
+    thePlayer.ay = 250
     if (thePlayer.tileKindAt(TileDirection.Left, assets.tile`myTile2`)) {
         thePlayer.ay = 0
         thePlayer.vy = 40
         if (controller.A.isPressed()) {
             thePlayer.vy = -40
             thePlayer.vx = 100
-            if (thePlayer.isHittingTile(CollisionDirection.Bottom)) {
-                thePlayer.vx = 0
-            }
+            wallJump = 1
         }
     }
     if (thePlayer.tileKindAt(TileDirection.Right, assets.tile`myTile3`)) {
         thePlayer.ay = 0
         thePlayer.vy = 40
         if (controller.A.isPressed()) {
-            thePlayer.vy = -40
+            thePlayer.vy = -200
             thePlayer.vx = -100
-        }
-        if (thePlayer.isHittingTile(CollisionDirection.Bottom)) {
-            thePlayer.vx = 0
+            wallJump = 1
         }
     }
 })
