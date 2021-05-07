@@ -6,6 +6,11 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, l
         thePlayer.vy = -100
     }
 })
+function stageThree () {
+    stageCounter = 3
+    tiles.setTilemap(tilemap`level5`)
+    tiles.placeOnTile(thePlayer, tiles.getTileLocation(4, 28))
+}
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (jumpCounter == 0) {
         thePlayer.vy = -150
@@ -15,9 +20,19 @@ controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile4`, function (sprite, location) {
-    pause(100)
-    scene.cameraShake(4, 1000)
-    arenaOne()
+    if (stageCounter == 1) {
+        scene.cameraShake(4, 1000)
+        controller.vibrate(900)
+        arenaOne()
+    }
+    if (stageCounter == 2) {
+        scene.cameraShake(4, 1000)
+        controller.vibrate(900)
+    }
+    if (stageCounter == 3) {
+        scene.cameraShake(4, 1000)
+        controller.vibrate(900)
+    }
 })
 controller.combos.attachCombo("" + controller.combos.idToString(controller.combos.ID.up) + controller.combos.idToString(controller.combos.ID.B), function () {
 	
@@ -26,31 +41,77 @@ function upAttack () {
 	
 }
 function stageOne () {
+    stageCounter = 1
+    bossBattle = 0
     tiles.setTilemap(tilemap`level3`)
+    tiles.placeOnTile(thePlayer, tiles.getTileLocation(2, 28))
 }
+function stageTwo () {
+    stageCounter = 2
+    tiles.setTilemap(tilemap`level4`)
+    tiles.placeOnTile(thePlayer, tiles.getTileLocation(13, 10))
+}
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile8`, function (sprite, location) {
+    scene.cameraFollowSprite(bossOne)
+    bossOne.ay = 300
+    tiles.setTileAt(tiles.getTileLocation(65, 20), assets.tile`transparency16`)
+    bossBattle = 1
+})
 function arenaOne () {
     tiles.setTilemap(tilemap`level1`)
+    tiles.placeOnTile(bossOne, tiles.getTileLocation(56, 5))
 }
+let rightEnemy = 0
+let leftEnemy = 0
+let jumpEnemy = 0
 let wallJump = 0
+let bossBattle = 0
 let jumpCounter = 0
+let stageCounter = 0
 let thePlayer: Sprite = null
-let bossOne = sprites.create(img`
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
+let bossOne: Sprite = null
+scene.setBackgroundColor(1)
+bossOne = sprites.create(img`
+    ...............fff......................
+    ..............ff.fff....................
+    ............fff.....ff..................
+    ..........fff........fff................
+    .........ff.............ff..............
+    ........f.................f.............
+    .......f...................ff...........
+    ......ff.....................f..........
+    ......f......................ff.........
+    .....f........................ff........
+    ....f..........................ff.......
+    ....f...........................f.......
+    ...ff............................f......
+    ...f.............................f......
+    ..f...............................f.....
+    ..f...............................f.....
+    .f.................................f....
+    .f.................................f....
+    .f.................................f....
+    .f..................................f...
+    .f..................................f...
+    .f.............f....................f...
+    .f......................f...........f...
+    .f..................................f...
+    ..f.................................f...
+    ..f.................................f...
+    ..f...............fff...............f...
+    ...f..........ffff...ffff..........f....
+    ...f....................ff.........f....
+    ...ff.............................ff....
+    .....f............................f.....
+    ......f..........................ff.....
+    ......f.........................ff......
+    .......f.......................ff.......
+    ........ff....................ff........
+    ..........ff................ff..........
+    ............fff..........fff............
+    ...............ffffffffff...............
+    ........................................
+    ........................................
     `, SpriteKind.bossEnemy)
 let playerStatusBar = statusbars.create(20, 4, StatusBarKind.Health)
 playerStatusBar.setColor(7, 2, 10)
@@ -86,12 +147,30 @@ game.onUpdate(function () {
     }
     if (wallJump == 1) {
         controller.moveSprite(thePlayer, 0, 0)
-        pause(100)
+        pause(200)
+        wallJump = 0
+    } else {
         controller.moveSprite(thePlayer, 100, 0)
+    }
+    while (bossBattle == 1) {
+        pause(100)
+        jumpEnemy = randint(0, 10)
+        leftEnemy = randint(0, 10)
+        rightEnemy = randint(0, 10)
+        bossOne.ay = 200
+        if (true) {
+        	
+        }
+        if (true) {
+        	
+        }
+        if (true) {
+        	
+        }
     }
 })
 forever(function () {
-    thePlayer.ay = 250
+    thePlayer.ay = 200
     if (thePlayer.tileKindAt(TileDirection.Left, assets.tile`myTile2`)) {
         thePlayer.ay = 0
         thePlayer.vy = 40

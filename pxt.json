@@ -9,7 +9,8 @@
         "arcade-text": "github:microsoft/arcade-text#v1.3.0",
         "controller": "*",
         "pxt-status-bar": "github:jwunderl/pxt-status-bar#v0.4.1",
-        "settings-blocks": "github:microsoft/pxt-settings-blocks#v1.0.0"
+        "settings-blocks": "github:microsoft/pxt-settings-blocks#v1.0.0",
+        "darts": "*"
     },
     "files": [
         "main.blocks",
