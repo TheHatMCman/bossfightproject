@@ -6,6 +6,23 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, l
         thePlayer.vy = -100
     }
 })
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile19`, function (sprite, location) {
+    thePlayer.destroy(effects.bubbles, 750)
+    timer.after(750, function () {
+        playerStatusBar.value = 0
+        game.over(false)
+    })
+})
+sprites.onOverlap(SpriteKind.Player, SpriteKind.bossEnemy, function (sprite, otherSprite) {
+    if (playerInvincibility == 1) {
+        enemyStatusBar.value += -20
+        pause(500)
+    }
+    if (playerInvincibility == 0) {
+        playerStatusBar.value += -20
+        pause(500)
+    }
+})
 function stageThree () {
     stageCounter = 3
     tiles.setTilemap(tilemap`level5`)
@@ -34,12 +51,76 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile4`, function (sprite, l
         controller.vibrate(900)
     }
 })
-controller.combos.attachCombo("" + controller.combos.idToString(controller.combos.ID.up) + controller.combos.idToString(controller.combos.ID.B), function () {
-    playerInvincibility = 1
+statusbars.onZero(StatusBarKind.EnemyHealth, function (status) {
+    bossOne.destroy(effects.ashes, 500)
+    timer.after(500, function () {
+        stageTwo()
+    })
 })
-function upAttack () {
-	
-}
+controller.combos.attachCombo("u+b", function () {
+    playerInvincibility = 1
+    animation.runImageAnimation(
+    thePlayer,
+    [img`
+        . . . . . . . f f . . . . . . . 
+        . . . . . . . f f . . . . . . . 
+        . . . . . . f f f . . . . . . . 
+        . . . . . . f 1 f f . . . . . . 
+        . . . . . . f 1 1 f . . . . . . 
+        . . . . . . f 1 1 f f f f f . . 
+        f f f . . f f f f f 1 1 1 f f f 
+        f 1 f f f 1 1 1 1 1 . . 1 1 1 f 
+        f 1 1 1 1 . . . . . . . . . 1 f 
+        f 1 . . . . . . . 1 . 1 . . 1 f 
+        f 1 . . . 1 . . . . . 1 . . 1 f 
+        f 1 1 . . . . . . . 1 . . . 1 f 
+        f f 1 1 . . . 1 1 1 . . 1 1 1 f 
+        . f f 1 1 1 . . . 1 1 1 1 f f . 
+        . . f f f 1 1 1 1 1 f f f f . . 
+        . . . . f f f f f f f . . . . . 
+        `,img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . f f f f f f f . . . . 
+        . . . f f f 1 1 1 1 1 f f f . . 
+        f f f f 1 1 1 . . . 1 1 1 f f . 
+        f 1 1 1 . . . . . . . . 1 1 f . 
+        f 1 . . . . . . . 1 . . . 1 f f 
+        f 1 . . . . . . . . . . . 1 1 f 
+        f 1 . . . 1 . . . . . 1 . . 1 f 
+        f 1 . . . . . . . . 1 1 . . 1 f 
+        f 1 . . . . . . . 1 1 . . . 1 f 
+        f 1 1 . . . 1 1 1 1 . . . 1 1 f 
+        f f 1 1 . . . . . . . . 1 1 f f 
+        . f f 1 1 . . . . . 1 1 1 f f . 
+        . . f f 1 1 1 1 1 1 1 f f f . . 
+        . . . f f f f f f f f . . . . . 
+        `],
+    500,
+    false
+    )
+    thePlayer.setImage(img`
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . . . . . . . . . . 
+        . . . . . . . f f f 1 1 f . . . 
+        . . . . f f f f 1 1 1 1 1 f . . 
+        . . f f f 1 1 1 1 . . . 1 f . . 
+        . . f 1 1 1 1 . . . . . 1 f f . 
+        . f f 1 . . . . . 1 . . 1 1 f . 
+        . f 1 1 . . 1 . . . . . . 1 f . 
+        . f 1 . . . . . . . . . . 1 1 f 
+        . f 1 1 . . . . . . 1 1 . 1 1 f 
+        . f f 1 . . 1 1 . 1 1 . . 1 f f 
+        . . f 1 1 . . 1 1 . . . 1 1 f . 
+        . . . f 1 1 1 1 1 1 1 1 1 f f . 
+        . . . . f f f f f f f f f f . . 
+        `)
+    timer.after(750, function () {
+        playerInvincibility = 0
+    })
+})
 function stageOne () {
     stageCounter = 1
     bossBattle = 0
@@ -170,86 +251,85 @@ function stageOne () {
 }
 function stageTwo () {
     stageCounter = 2
-    tiles.setTilemap(tilemap`level4`)
     tiles.placeOnTile(thePlayer, tiles.getTileLocation(13, 10))
+    tiles.setTilemap(tilemap`level4`)
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile8`, function (sprite, location) {
     scene.cameraFollowSprite(bossOne)
     bossOne.ay = 300
     tiles.setTileAt(tiles.getTileLocation(65, 20), assets.tile`transparency16`)
     bossBattle = 1
+    timer.after(2000, function () {
+        scene.cameraFollowSprite(thePlayer)
+    })
 })
 function arenaOne () {
     tiles.setTilemap(tilemap`level1`)
     tiles.placeOnTile(bossOne, tiles.getTileLocation(56, 5))
 }
-sprites.onOverlap(SpriteKind.Player, SpriteKind.Enemy, function (sprite, otherSprite) {
-    if (playerInvincibility == 1) {
-        enemyStatusBar.value += -20
-    }
-    if (playerInvincibility == 0) {
-        playerStatusBar.value += -20
-    }
-})
 let rightEnemy = 0
 let leftEnemy = 0
 let jumpEnemy = 0
 let wallJump = 0
 let bossBattle = 0
-let playerInvincibility = 0
 let jumpCounter = 0
 let stageCounter = 0
+let playerInvincibility = 0
 let enemyStatusBar: StatusBarSprite = null
 let thePlayer: Sprite = null
 let playerStatusBar: StatusBarSprite = null
 let bossOne: Sprite = null
 scene.setBackgroundColor(1)
 bossOne = sprites.create(img`
+    ........................................
+    ........................................
     ...............fff......................
-    ..............ff.fff....................
-    ............fff.....ff..................
-    ..........fff........fff................
-    .........ff.............ff..............
-    ........f.................f.............
-    .......f...................ff...........
-    ......ff.....................f..........
-    ......f......................ff.........
-    .....f........................ff........
-    ....f..........................ff.......
-    ....f...........................f.......
-    ...ff............................f......
-    ...f.............................f......
-    ..f...............................f.....
-    ..f...............................f.....
-    .f.................................f....
-    .f.................................f....
-    .f.................................f....
-    .f..................................f...
-    .f..................................f...
-    .f.............f....................f...
-    .f......................f...........f...
-    .f..................................f...
-    ..f.................................f...
-    ..f.................................f...
-    ..f...............fff...............f...
-    ...f..........ffff...ffff..........f....
-    ...f....................ff.........f....
-    ...ff.............................ff....
-    .....f............................f.....
-    ......f..........................ff.....
-    ......f.........................ff......
-    .......f.......................ff.......
-    ........ff....................ff........
-    ..........ff................ff..........
-    ............fff..........fff............
+    ..............ff2fff....................
+    ............fff22222ff..................
+    ..........fff2222.222fff................
+    .........ff222.2.2.22222ff..............
+    ........f22.2.2.2.2.2.2.22f.............
+    .......f22.2.2.2.2.2.2.2.22ff...........
+    ......ff2.2.2.2.2.2.2.2.2.222f..........
+    ......f2.2.2.2.2.2.2.2.2.2.22ff.........
+    .....f222.2.2.2.2.2.2.2.2.2.22ff........
+    ....f222.2.2.2.2.2.2.2.2.2.2.22ff.......
+    ....f22.2.2.2.2.2.2.2.2.2.2.2.22f.......
+    ...ff2.2.2.2.2.2.2.2.2.2.2.2.2.22f......
+    ...f2.2.2.2.2.2.2.2.2.2.2.2.2.2.2f......
+    ..f2.2.2.2.2.2.2.2.2.2.2.2.2.2.222f.....
+    .f222.2.2.2.2.2.2.2.2.2.2.2......2f.....
+    .f22.2.2.2.2.2.2...2...2.2.2.....22f....
+    .f2.2.2.2.2.2...2.2...2...2.......2f....
+    .f22.2.2.2.2.2...2.2.2.2.2.2......2f....
+    .f2.2.2.2.....2.2.2.2...2...2.....22f...
+    .f22.2.2.2.2.2.2.2.2.....2.2.2.....2f...
+    .f2.2.2.2.2...2f2.2.2.2...2.2......2f...
+    .f22.2.2.2.2...2.......2f2...2.....2f...
+    .f222.2.2...2.2.2.......2.2.2......2f...
+    ..f2.2.2.2.2.2.2.2.2.....2.2.2.....2f...
+    ..f22.2.2.2...2.....2.......2......2f...
+    ..f222.2.2.2.2.2.2fff..2.2.2.2....22f...
+    ...f222.2.2.2.2fff2.2fff2.2.2.....2f....
+    ...f2222.2.2.2.2.2.2.2.2ff.2.2...22f....
+    ...ff2222.2.2.2.2.2.2.2.2.2.2....2ff....
+    .....f2222.2.2.2.2.2.2.2.2.2.2.22.f.....
+    ......f222222.2.2.2.2.2.2.2.2222.ff.....
+    ......f2222222222222222222222222ff......
+    .......f22222222222222222222222ff.......
+    ........ff22222222222222222222ff........
+    ..........ff2222222222222222ff..........
+    ............fff2222222222fff............
     ...............ffffffffff...............
-    ........................................
-    ........................................
     `, SpriteKind.bossEnemy)
 playerStatusBar = statusbars.create(20, 4, StatusBarKind.Health)
 playerStatusBar.value = 100
 playerStatusBar.setColor(7, 2, 10)
 thePlayer = sprites.create(img`
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
+    . . . . . . . . . . . . . . . . 
     . . . . . . . f f f 1 1 f . . . 
     . . . . f f f f 1 1 1 1 1 f . . 
     . . f f f 1 1 1 1 . . . 1 f . . 
@@ -262,12 +342,9 @@ thePlayer = sprites.create(img`
     . . f 1 1 . . 1 1 . . . 1 1 f . 
     . . . f 1 1 1 1 1 1 1 1 1 f f . 
     . . . . f f f f f f f f f f . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
-    . . . . . . . . . . . . . . . . 
     `, SpriteKind.Player)
 playerStatusBar.attachToSprite(thePlayer)
+playerStatusBar.positionDirection(CollisionDirection.Bottom)
 enemyStatusBar = statusbars.create(40, 4, StatusBarKind.EnemyHealth)
 enemyStatusBar.value = 200
 enemyStatusBar.setColor(10, 2, 7)
@@ -287,6 +364,7 @@ game.onUpdate(function () {
     } else {
         controller.moveSprite(thePlayer, 100, 0)
     }
+    console.log(playerInvincibility)
 })
 forever(function () {
     thePlayer.ay = 200
@@ -317,21 +395,20 @@ forever(function () {
 })
 game.onUpdateInterval(100, function () {
     if (bossBattle == 1) {
-        bossOne.ay = 300
-        jumpEnemy = randint(0, 20)
-        leftEnemy = randint(0, 10)
-        rightEnemy = randint(0, 10)
-        if (jumpEnemy >= 19) {
-            bossOne.vy = -100
-        }
-        if (leftEnemy > 10) {
-            bossOne.vx = -100
-        }
-        if (rightEnemy > 10) {
-            bossOne.vx = 100
-        }
-        console.log(jumpEnemy)
-        console.log(leftEnemy)
-        console.log(rightEnemy)
+        timer.after(2000, function () {
+            bossOne.ay = 300
+            jumpEnemy = randint(0, 20)
+            leftEnemy = randint(0, 10)
+            rightEnemy = randint(0, 10)
+            if (jumpEnemy >= 19) {
+                bossOne.vy = -100
+            }
+            if (leftEnemy > 10) {
+                bossOne.vx = -100
+            }
+            if (rightEnemy > 10) {
+                bossOne.vx = 100
+            }
+        })
     }
 })

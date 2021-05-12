@@ -10,7 +10,8 @@
         "controller": "*",
         "pxt-status-bar": "github:jwunderl/pxt-status-bar#v0.4.1",
         "settings-blocks": "github:microsoft/pxt-settings-blocks#v1.0.0",
-        "darts": "*"
+        "darts": "*",
+        "Timers": "github:microsoft/arcade-timers#v1.1.0"
     },
     "files": [
         "main.blocks",
