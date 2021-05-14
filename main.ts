@@ -7,10 +7,9 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile1`, function (sprite, l
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile19`, function (sprite, location) {
-    thePlayer.destroy(effects.bubbles, 750)
-    timer.after(750, function () {
-        playerStatusBar.value = 0
-        game.over(false)
+    sprite.startEffect(effects.bubbles, 500)
+    timer.after(2000, function () {
+        effects.clearParticles(sprite)
     })
 })
 sprites.onOverlap(SpriteKind.Player, SpriteKind.bossEnemy, function (sprite, otherSprite) {
@@ -26,7 +25,7 @@ sprites.onOverlap(SpriteKind.Player, SpriteKind.bossEnemy, function (sprite, oth
 function stageThree () {
     stageCounter = 3
     tiles.setTilemap(tilemap`level5`)
-    tiles.placeOnTile(thePlayer, tiles.getTileLocation(4, 28))
+    tiles.placeOnTile(thePlayer, tiles.getTileLocation(4, 19))
 }
 controller.A.onEvent(ControllerButtonEvent.Pressed, function () {
     if (jumpCounter == 0) {
@@ -51,6 +50,15 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile4`, function (sprite, l
         scene.cameraShake(4, 1000)
         controller.vibrate(900)
     }
+})
+controller.combos.attachCombo("r+b", function () {
+    playerInvincibility = 1
+    thePlayer.vx = 300
+    playerStatusBar.value += 5
+    timer.after(750, function () {
+        thePlayer.vx = 0
+        playerInvincibility = 0
+    })
 })
 function arenaTwo () {
     scene.setBackgroundImage(img`
@@ -177,56 +185,56 @@ function arenaTwo () {
         `)
     tiles.setTilemap(tilemap`level7`)
     bossTwo = sprites.create(img`
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
-        77777777777777777777777777777777777777777777777777
+        ..................................................
+        ..................................................
+        ..................................................
+        ..................................................
+        ...............1111111............................
+        .............111.1111111..........................
+        ............1111111111111.........................
+        ............111111111111111.......................
+        ...........1111111111111111.......................
+        ..........111111111111111.11......................
+        .........1111111111111111111......................
+        .........11111111111111111111.....................
+        ........111111111111111111111.....................
+        ........11111111111fff1111111.....................
+        ........1111fff111ffff11111111....................
+        ........111ffff111fffff11111111...................
+        ........111ffff1111ffff11111111...................
+        ........111fffff111ffff111111111..................
+        ........111fffff111fffff11111111..................
+        ........111ffffff11fffff111111111.................
+        .........111fffff111ffff111111111.................
+        .........111fffff111ffff1111111111................
+        .........111fffff1111ff1111111.1111...............
+        ..........111ffff111111111111111111...............
+        ..........11111111111111111111111111..............
+        ..........111111111111111111111111111.............
+        ..........d11111111111111111111111111.............
+        ...........111111111111111111111111111............
+        ...........1d111111d1111d11111111111111...........
+        ...........d1111111111111111d11111111111..........
+        ............1111111111.11d1111111111111.11........
+        ............1d1111111d11111d111dd1111111111.......
+        ............b11d111111dd111dd111dd1111.1.1.1......
+        .............bdd1d11111dd111111111111111111111....
+        .............bb.d1111111111111.11111.111111..11...
+        ..............bbd11d11111111111111111111..1111..d.
+        ...............b.d111111111.11.11111111.111.d.ddd.
+        ...............bbd11d111.11111111111..111.........
+        ................bbd111111111.111.11111.1.1........
+        .................bdd1d1d111111.dd.1.1111..1.......
+        .................b.d.11111.1.1...dd11.1.11.1......
+        ..................b..11.1d11.......dddd1..1.......
+        ...................bbd.11...111.......d.1.1.11....
+        ....................b.d.d1.d1..1.........d.dd1....
+        .....................b..d.1..11.11................
+        ......................bb.d.1d..1..1...............
+        .........................bbb.d1..1................
+        ..................................................
+        ..................................................
+        ..................................................
         `, SpriteKind.bossEnemy)
     enemyStatusBar = statusbars.create(40, 4, StatusBarKind.EnemyHealth)
     enemyStatusBar.value = 200
@@ -235,10 +243,24 @@ function arenaTwo () {
     tiles.placeOnTile(bossTwo, tiles.getTileLocation(28, 10))
 }
 statusbars.onZero(StatusBarKind.EnemyHealth, function (status) {
-    bossOne.destroy(effects.ashes, 500)
-    timer.after(500, function () {
-        stageTwo()
-    })
+    bossBattle = 0
+    if (stageCounter == 1) {
+        bossOne.destroy(effects.ashes, 500)
+        timer.after(500, function () {
+            stageTwo()
+        })
+    }
+    if (stageCounter == 2) {
+        bossTwo.destroy(effects.ashes, 500)
+        timer.after(500, function () {
+            stageThree()
+        })
+    }
+    if (stageCounter == 3) {
+        timer.after(500, function () {
+        	
+        })
+    }
 })
 controller.combos.attachCombo("u+b", function () {
     playerInvincibility = 1
@@ -432,6 +454,13 @@ function stageOne () {
     tiles.setTilemap(tilemap`level3`)
     tiles.placeOnTile(thePlayer, tiles.getTileLocation(2, 28))
 }
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile20`, function (sprite, location) {
+    thePlayer.destroy(effects.bubbles, 750)
+    timer.after(750, function () {
+        playerStatusBar.value = 0
+        game.over(false)
+    })
+})
 function stageTwo () {
     stageCounter = 2
     tiles.placeOnTile(thePlayer, tiles.getTileLocation(13, 10))
@@ -560,12 +589,36 @@ function stageTwo () {
     tiles.setTilemap(tilemap`level4`)
 }
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile8`, function (sprite, location) {
-    scene.cameraFollowSprite(bossOne)
-    bossOne.ay = 300
-    tiles.setTileAt(tiles.getTileLocation(65, 20), assets.tile`transparency16`)
-    bossBattle = 1
-    timer.after(2000, function () {
-        scene.cameraFollowSprite(thePlayer)
+    if (stageCounter == 1) {
+        scene.cameraFollowSprite(bossOne)
+        bossOne.ay = 300
+        tiles.setTileAt(tiles.getTileLocation(65, 20), assets.tile`transparency16`)
+        bossBattle = 1
+        timer.after(2000, function () {
+            scene.cameraFollowSprite(thePlayer)
+        })
+    }
+    if (stageCounter == 2) {
+        scene.cameraFollowSprite(bossTwo)
+        tiles.setTileAt(tiles.getTileLocation(14, 24), assets.tile`transparency16`)
+        bossOne.ay = 300
+        bossTwo.follow(thePlayer, 100)
+        bossBattle = 1
+        timer.after(2000, function () {
+            scene.cameraFollowSprite(thePlayer)
+        })
+    }
+    if (stageCounter == 3) {
+    	
+    }
+})
+controller.combos.attachCombo("l+b", function () {
+    playerInvincibility = 1
+    thePlayer.vx = -300
+    playerStatusBar.value += 5
+    timer.after(750, function () {
+        thePlayer.vx = 0
+        playerInvincibility = 0
     })
 })
 function arenaOne () {
@@ -622,8 +675,8 @@ let rightEnemy = 0
 let leftEnemy = 0
 let jumpEnemy = 0
 let wallJump = 0
-let bossBattle = 0
 let bossOne: Sprite = null
+let bossBattle = 0
 let bossTwo: Sprite = null
 let jumpCounter = 0
 let stageCounter = 0
@@ -652,6 +705,7 @@ thePlayer = sprites.create(img`
     `, SpriteKind.Player)
 playerStatusBar = statusbars.create(20, 4, StatusBarKind.Health)
 playerStatusBar.value = 100
+playerStatusBar.max = 100
 playerStatusBar.setColor(7, 2, 10)
 playerStatusBar.attachToSprite(thePlayer)
 playerStatusBar.positionDirection(CollisionDirection.Bottom)
