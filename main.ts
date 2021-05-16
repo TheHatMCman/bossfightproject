@@ -60,6 +60,13 @@ controller.combos.attachCombo("r+b", function () {
         playerInvincibility = 0
     })
 })
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile42`, function (sprite, location) {
+    thePlayer.destroy(effects.disintegrate, 750)
+    timer.after(150, function () {
+        playerStatusBar.value = 0
+        game.over(false)
+    })
+})
 function arenaTwo () {
     scene.setBackgroundImage(img`
         cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc
@@ -244,6 +251,7 @@ function arenaTwo () {
 }
 statusbars.onZero(StatusBarKind.EnemyHealth, function (status) {
     bossBattle = 0
+    playerStatusBar.value += 20
     if (stageCounter == 1) {
         bossOne.destroy(effects.ashes, 500)
         timer.after(500, function () {
@@ -611,6 +619,13 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile8`, function (sprite, l
     if (stageCounter == 3) {
     	
     }
+})
+scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile43`, function (sprite, location) {
+    thePlayer.destroy(effects.disintegrate, 750)
+    timer.after(150, function () {
+        playerStatusBar.value = 0
+        game.over(false)
+    })
 })
 controller.combos.attachCombo("l+b", function () {
     playerInvincibility = 1
