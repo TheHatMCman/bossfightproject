@@ -609,7 +609,7 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile8`, function (sprite, l
     if (stageCounter == 2) {
         scene.cameraFollowSprite(bossTwo)
         tiles.setTileAt(tiles.getTileLocation(14, 24), assets.tile`transparency16`)
-        bossOne.ay = 300
+        bossTwo.ay = 300
         bossTwo.follow(thePlayer, 100)
         bossBattle = 1
         timer.after(2000, function () {
@@ -617,7 +617,34 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile8`, function (sprite, l
         })
     }
     if (stageCounter == 3) {
-    	
+        bossThree = sprites.create(img`
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . . . . . . . . . . 
+            . . . . . . . 1 1 1 1 . . . . . 
+            . . . . . . 1 1 f 1 1 1 . . . . 
+            . . . . . 1 1 f f f f 1 1 . . . 
+            . . . . 1 1 f f . . f f 1 1 . . 
+            . . . 1 1 f f . . . . f f 1 1 . 
+            . . . 1 f f . . . f . . f f 1 . 
+            . . 1 1 f . . . . . . . . f 1 1 
+            . . 1 f f . f . . . . . . f f 1 
+            . 1 f f . . . . . . f . . . f 1 
+            1 1 f . . . . . f f . f . f f 1 
+            1 f f . . . . f . . . . f f 1 1 
+            . 1 f f f . . . . f f f f 1 1 . 
+            . 1 1 1 f f f f f f 1 1 1 1 . . 
+            . . . 1 1 1 1 1 1 1 . . . . . . 
+            `, SpriteKind.bossEnemy)
+        scene.cameraFollowSprite(bossThree)
+        enemyStatusBar.value = 200
+        enemyStatusBar.setColor(10, 2, 7)
+        enemyStatusBar.attachToSprite(bossThree)
+        tiles.placeOnTile(bossThree, tiles.getTileLocation(45, 4))
+        bossThree.ay = 400
+        bossThree.follow(thePlayer, 100)
+        timer.after(2000, function () {
+            scene.cameraFollowSprite(thePlayer)
+        })
     }
 })
 scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile43`, function (sprite, location) {
@@ -627,6 +654,9 @@ scene.onOverlapTile(SpriteKind.Player, assets.tile`myTile43`, function (sprite, 
         game.over(false)
     })
 })
+function arenaThree () {
+    tiles.setTilemap(tilemap`level10`)
+}
 controller.combos.attachCombo("l+b", function () {
     playerInvincibility = 1
     thePlayer.vx = -300
@@ -690,6 +720,7 @@ let rightEnemy = 0
 let leftEnemy = 0
 let jumpEnemy = 0
 let wallJump = 0
+let bossThree: Sprite = null
 let bossOne: Sprite = null
 let bossBattle = 0
 let bossTwo: Sprite = null
